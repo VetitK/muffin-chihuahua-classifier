@@ -1,4 +1,4 @@
-from lightning import LightningDataModule
+from pytorch_lightning import LightningDataModule
 import torch
 import os
 from torch.utils.data import DataLoader, random_split, Dataset
@@ -97,17 +97,17 @@ class MuffinChihuahuaDataModule(LightningDataModule):
         return DataLoader(self.train_dataset,
                           batch_size=self.batch_size,
                           shuffle=True,
-                        #   num_workers=self.numworkers
+                          num_workers=self.numworkers
                           )
     
     def val_dataloader(self):
         return DataLoader(self.val_dataset,
                           batch_size=self.batch_size,
-                        #   num_workers=self.numworkers
+                          num_workers=self.numworkers
                           )
     
     def test_dataloader(self):
         return DataLoader(self.test_dataset,
                           batch_size=self.batch_size,
-                        #   num_workers=self.numworkers
+                          num_workers=self.numworkers
                           )    

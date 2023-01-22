@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from lightning import LightningModule
+from pytorch_lightning import LightningModule
 from model import MuffinChihuahuaClassifier
 from torchmetrics import Accuracy
 import wandb
@@ -8,8 +8,8 @@ class MuffinChihuahuaLightningModule(LightningModule):
     
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        self.wandb_logger = wandb.init(project="MUFFIN-CHIHUAHUA")
-        self.accuracy = Accuracy(num_classes=2)
+
+        self.accuracy = Accuracy(task='binary', num_classes=2)
         self.model = MuffinChihuahuaClassifier()
         self.loss = nn.NLLLoss()
         self.save_hyperparameters()
@@ -25,23 +25,30 @@ class MuffinChihuahuaLightningModule(LightningModule):
         x, y = batch
         y_pred = self.model(x)
         loss = self.loss(y_pred, y)
-        acc = self.accuracy(y_pred, y)
-        self.wandb_logger.log({"train_loss": loss, "train_acc": acc})
+        y_hat = torch.argmax(y_pred, dim=1)
+        acc = self.accuracy(y_hat, y)
+        self.log("train_loss", loss)
+        self.log("train_acc", acc)
         return loss
 
     def validation_step(self, batch, batch_idx: int) -> torch.Tensor:
         x, y = batch
         y_pred = self.model(x)
         loss = self.loss(y_pred, y)
-        acc = self.accuracy(y_pred, y)
-        self.wandb_logger.log({"val_loss": loss, "val_acc": acc})
+        y_hat = torch.argmax(y_pred, dim=1)
+        acc = self.accuracy(y_hat, y)
+        self.log("val_loss", loss)
+        self.log("val_acc", acc)
         return loss
     
     def test_step(self, batch, batch_idx):
         x, y = batch
         y_pred = self.model(x)
         loss = self.loss(y_pred, y)
-        acc = torch.sum(torch.argmax(y_pred, dim=1) == y).item() / len(y)
+        y_hat = torch.argmax(y_pred, dim=1)
+        acc = self.accuracy(y_hat, y)
+        self.log("test_loss", loss)
+        self.log("test_acc", acc)
         
         return {"test_loss": loss, "test_acc": acc}
     
