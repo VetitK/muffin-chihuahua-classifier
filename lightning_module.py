@@ -3,11 +3,12 @@ import torch.nn as nn
 from lightning import LightningModule
 from model import MuffinChihuahuaClassifier
 from torchmetrics import Accuracy
-
+import wandb
 class MuffinChihuahuaLightningModule(LightningModule):
     
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
+        self.wandb_logger = wandb.init(project="MUFFIN-CHIHUAHUA")
         self.accuracy = Accuracy(num_classes=2)
         self.model = MuffinChihuahuaClassifier()
         self.loss = nn.NLLLoss()
@@ -25,8 +26,7 @@ class MuffinChihuahuaLightningModule(LightningModule):
         y_pred = self.model(x)
         loss = self.loss(y_pred, y)
         acc = self.accuracy(y_pred, y)
-        # self.log("train_loss", loss)
-        # self.log("train_acc", acc)
+        self.wandb_logger.log({"train_loss": loss, "train_acc": acc})
         return loss
 
     def validation_step(self, batch, batch_idx: int) -> torch.Tensor:
@@ -34,8 +34,7 @@ class MuffinChihuahuaLightningModule(LightningModule):
         y_pred = self.model(x)
         loss = self.loss(y_pred, y)
         acc = self.accuracy(y_pred, y)
-        # self.log("val_loss", loss)
-        # self.log("train_acc", acc)
+        self.wandb_logger.log({"val_loss": loss, "val_acc": acc})
         return loss
     
     def test_step(self, batch, batch_idx):

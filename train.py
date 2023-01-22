@@ -7,7 +7,7 @@ import wandb
 def main():
     # Init logger
     # wandb.init(project="MUFFIN-CHIHUAHUA")
-    # wandb_logger = WandbLogger(name='resnet18_21Jan_1', project="MUFFIN-CHIHUAHUA")
+    # 
     
     # Init data module
     data_module = MuffinChihuahuaDataModule(data_dir="data",
