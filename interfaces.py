@@ -71,11 +71,14 @@ class MuffinChihuahuaDataModule(LightningDataModule):
         self.batch_size = batch_size
         self.numworkers = numworkers
         self._train_transforms = Compose([Resize((224, 224)),
-                                ToTensor()])
+                                ToTensor(),
+                                Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
         self._val_transforms = Compose([Resize((224, 224)),
-                                ToTensor()])
+                                ToTensor(),
+                                Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
         self._test_transforms = Compose([Resize((224, 224)),
-                                ToTensor()])
+                                ToTensor(),
+                                Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
 
     def prepare_data(self):
         pass
