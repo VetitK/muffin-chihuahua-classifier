@@ -1,6 +1,6 @@
-lightning==1.9.0
-Pillow==9.4.0
-pytorch_lightning==1.6.3
-torch==1.11.0
-torchmetrics==0.8.2
-torchvision==0.15.0
+Pillow
+pytorch_lightning
+torch
+torchmetrics
+torchvision
+onnxruntime
